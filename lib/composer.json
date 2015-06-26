@@ -1,0 +1,22 @@
+{
+  "name": "oligriffiths/nooku-class-locator",
+  "description": "Nooku Object Locator",
+  "keywords": ["nooku", "object locator"],
+  "type": "library",
+  "homepage": "https://github.com/nooku/nooku-platform",
+  "license": "Apache2",
+  "authors": [
+    {
+      "name": "Nooku",
+      "homepage": "https://github.com/nooku"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "ext-curl": "*",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "files": ["lib/class/loader.php"]
+  }
+}
