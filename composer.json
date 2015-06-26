@@ -1,7 +1,7 @@
 {
   "name": "oligriffiths/nooku-class-locator",
-  "description": "Nooku Object Locator",
-  "keywords": ["nooku", "object locator"],
+  "description": "Nooku Class Locator",
+  "keywords": ["nooku", "class locator"],
   "type": "library",
   "homepage": "https://github.com/nooku/nooku-platform",
   "license": "Apache2",
