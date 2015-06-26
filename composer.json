@@ -12,9 +12,7 @@
     }
   ],
   "require": {
-    "php": ">=5.4.0",
-    "ext-curl": "*",
-    "ext-json": "*"
+    "php": ">=5.4.0"
   },
   "autoload": {
     "files": ["lib/class/loader.php"]
