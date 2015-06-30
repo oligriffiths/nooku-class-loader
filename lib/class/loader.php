@@ -40,6 +40,11 @@ class ClassLoader implements ClassLoaderInterface
     protected $_locators = array();
 
     /**
+     * @var array
+     */
+    protected $_namespaces = array('*' => array());
+
+    /**
      * The loader basepath
      *
      * @var  string
@@ -190,9 +195,13 @@ class ClassLoader implements ClassLoaderInterface
         if(!$this->__registry->has($key))
         {
             //Locate the class
-            foreach($this->_locators as $locator)
+            $locators = $this->getLocatorsForClass($class);
+
+            foreach($locators as $name => $path)
             {
-                if(false !== $result = $locator->locate($class, $base)) {
+                $locator = $this->_locators[$name];
+
+                if(false !== $result = $locator->locate($class, $path ?: $base)) {
                     break;
                 };
             }
@@ -203,6 +212,36 @@ class ClassLoader implements ClassLoaderInterface
         } else $result = $this->__registry->get($key);
 
         return $result;
+    }
+
+    /**
+     * Find the locators that are associated with the class & namespace
+     *
+     * @param $class
+     * @return array
+     */
+    protected function getLocatorsForClass($class)
+    {
+        $matched_locators = array();
+        foreach ($this->_namespaces as $namespace => $locators) {
+
+            if ($namespace != '*') {
+
+                // If class contains a namespace, but namespace is empty, skip
+                if (empty($namespace) && strpos($class, '\\')) {
+                    continue;
+                }
+
+                // If namespace and class doesn't start with namespace
+                if ($namespace && strpos('\\'.$class, '\\'.$namespace) !== 0) {
+                    continue;
+                }
+            }
+
+            $matched_locators = array_merge_recursive($matched_locators, $locators);
+        }
+
+        return $matched_locators;
     }
 
     /**
@@ -237,6 +276,8 @@ class ClassLoader implements ClassLoaderInterface
         } else {
             $this->_locators = $this->_locators + $array;
         }
+
+        $this->registerLocatorNamespaces($locator, $locator->getNamespaces());
     }
 
     /**
@@ -254,6 +295,38 @@ class ClassLoader implements ClassLoaderInterface
         }
 
         return $result;
+    }
+
+    /**
+     * @param $namespace
+     * @param $type
+     */
+    public function registerLocatorNamespaces(ClassLocatorInterface $locator, array $namespaces)
+    {
+        $name = $locator->getName();
+
+        //Ensure locator is register already
+        if (!isset($this->_locators[$name])) {
+            throw new \InvalidArgumentException('The locator '.$name.' passed to '.__CLASS__.'::'.__FUNCTION__.' is not registered. Please call registerLocator() instead');
+        }
+
+        //No namespaces are catch all
+        if (empty($namespaces)) {
+            $namespaces = array('*' => null);
+        }
+
+        foreach($namespaces as $namespace => $paths) {
+
+            $namespace = trim($namespace, '\\');
+
+            if( !isset($this->_namespaces[$namespace])) {
+                $this->_namespaces[$namespace] = array();
+            }
+
+            if(!in_array($locator, $this->_namespaces[$namespace])) {
+                $this->_namespaces[$namespace][$name] = $paths;
+            }
+        }
     }
 
     /**
