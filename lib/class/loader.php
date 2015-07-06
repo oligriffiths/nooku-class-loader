@@ -59,27 +59,21 @@ class ClassLoader implements ClassLoaderInterface
     protected $_debug = false;
 
     /**
+     * Config array
+     *
+     * @var array
+     */
+    protected $_config = array();
+
+    /**
      * Constructor
      *
      * @param array $config Array of configuration options.
      */
     final private function __construct($config = array())
     {
-        //Create the class registry
-        if(isset($config['cache']) && $config['cache'] && ClassRegistryCache::isSupported())
-        {
-            $this->__registry = new ClassRegistryCache();
-
-            if(isset($config['cache_namespace'])) {
-                $this->__registry->setNamespace($config['cache_namespace']);
-            }
-        }
-        else $this->__registry = new ClassRegistry();
-
-        //Set the debug mode
-        if(isset($config['debug'])) {
-            $this->setDebug($config['debug']);
-        }
+        //Set the config
+        $this->setConfig($config);
 
         //Register the library locator
         $this->registerLocator(new ClassLocatorLibrary($config));
@@ -140,6 +134,75 @@ class ClassLoader implements ClassLoaderInterface
     }
 
     /**
+     * Get the class registry
+     *
+     * @return ClassRegistryInterface
+     */
+    protected function getRegistry()
+    {
+        if(!$this->__registry)
+        {
+            $config = $this->getConfig();
+
+            if(isset($config['registry']))
+            {
+                $this->__registry = $config;
+            }
+            elseif(isset($config['cache']) && $config['cache'] && ClassRegistryCache::isSupported())
+            {
+                //Create the class registry
+                $this->__registry = new ClassRegistryCache();
+
+                if(isset($config['cache_namespace'])) {
+                    $this->__registry->setNamespace($config['cache_namespace']);
+                }
+            }
+            else $this->__registry = new ClassRegistry();
+        }
+
+        return $this->__registry;
+    }
+
+    /**
+     * Get the config array
+     *
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->_config;
+    }
+
+    /**
+     * Set the config array
+     *
+     * @param array $config
+     * @throw \InvalidArgumentException if setting cache key and registry already initialized
+     */
+    public function setConfig(array $config)
+    {
+        //Setup class registry
+        if(isset($config['registry']) || isset($config['cache']))
+        {
+            if(isset($config['registry']) && !$config['registry'] instanceof ClassRegistryInterface)
+            {
+                throw new \InvalidArgumentException('Class loader registry must implement ClassRegistryInterface');
+            }
+
+            if(isset($this->__registry))
+            {
+                throw new \InvalidArgumentException('Class loader registry can not be changed once initialized');
+            }
+        }
+
+        //Set the debug mode
+        $this->setDebug(isset($config['debug']) && $config['debug']);
+
+        //Store the config
+        $this->_config = $config;
+    }
+
+    /**
      * Load a class based on a class name
      *
      * @param string  $class    The class name
@@ -192,7 +255,7 @@ class ClassLoader implements ClassLoaderInterface
         $key  = $base ? $class.'-'.$base : $class;
 
         //Switch the namespace
-        if(!$this->__registry->has($key))
+        if(!$this->getRegistry()->has($key))
         {
             foreach($this->getLocatorsForClass($class) as $namespace => $locators)
             {
@@ -214,9 +277,9 @@ class ClassLoader implements ClassLoaderInterface
             }
 
             //Also store if the class could not be found to prevent repeated lookups.
-            $this->__registry->set($key, $result);
+            $this->getRegistry()->set($key, $result);
 
-        } else $result = $this->__registry->get($key);
+        } else $result = $this->getRegistry()->get($key);
 
         return $result;
     }
@@ -264,7 +327,7 @@ class ClassLoader implements ClassLoaderInterface
         $base = $base ? $base : $this->_base_path;
         $key  = $base ? $class.'-'.$base : $class;
 
-        $this->__registry->set($key, $path);
+        $this->getRegistry()->set($key, $path);
     }
 
     /**
@@ -348,7 +411,7 @@ class ClassLoader implements ClassLoaderInterface
         $alias = trim($alias);
         $class = trim($class);
 
-        $this->__registry->alias($class, $alias);
+        $this->getRegistry()->alias($class, $alias);
     }
 
     /**
@@ -359,7 +422,7 @@ class ClassLoader implements ClassLoaderInterface
      */
     public function getAliases($class)
     {
-        return array_search($class, $this->__registry->getAliases());
+        return array_search($class, $this->getRegistry()->getAliases());
     }
 
     /**
