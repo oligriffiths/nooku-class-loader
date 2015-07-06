@@ -9,13 +9,13 @@
 
 namespace Nooku\Library;
 
-require_once dirname(__FILE__) . '/interface.php';
-require_once dirname(__FILE__) . '/locator/interface.php';
-require_once dirname(__FILE__) . '/locator/abstract.php';
-require_once dirname(__FILE__) . '/locator/library.php';
-require_once dirname(__FILE__) . '/registry/interface.php';
-require_once dirname(__FILE__) . '/registry/registry.php';
-require_once dirname(__FILE__) . '/registry/cache.php';
+require_once dirname(__FILE__).'/interface.php';
+require_once dirname(__FILE__).'/locator/interface.php';
+require_once dirname(__FILE__).'/locator/abstract.php';
+require_once dirname(__FILE__).'/locator/library.php';
+require_once dirname(__FILE__).'/registry/interface.php';
+require_once dirname(__FILE__).'/registry/registry.php';
+require_once dirname(__FILE__).'/registry/cache.php';
 
 /**
  * Class Loader
@@ -85,7 +85,7 @@ class ClassLoader implements ClassLoaderInterface
         $this->registerLocator(new ClassLocatorLibrary($config));
 
         //Register the Nooku\Library namesoace
-        $this->registerLocatorNamespaces( 'library', [__NAMESPACE__ => dirname(dirname(__FILE__))]);
+        $this->registerLocatorNamespaces( 'library', array(__NAMESPACE__ => dirname(dirname(__FILE__))));
 
         //Register the loader with the PHP autoloader
         $this->register();
@@ -199,7 +199,7 @@ class ClassLoader implements ClassLoaderInterface
 
             foreach($locators as $name => $path)
             {
-                $locator = $this->_locators[$name];
+                $locator = $this->getLocator($name);
 
                 if(false !== $result = $locator->locate($class, $path ?: $base)) {
                     break;
@@ -312,7 +312,7 @@ class ClassLoader implements ClassLoaderInterface
         $name = $locator->getName();
 
         //Ensure locator is register already
-        if (!isset($this->_locators[$name])) {
+        if (!$this->getLocator($name)) {
             throw new \InvalidArgumentException('The locator '.$name.' passed to '.__CLASS__.'::'.__FUNCTION__.' is not registered. Please call registerLocator() instead');
         }
 
