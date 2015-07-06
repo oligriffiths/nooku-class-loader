@@ -200,6 +200,8 @@ class ClassLoader implements ClassLoaderInterface
 
         //Store the config
         $this->_config = $config;
+
+        return $this;
     }
 
     /**
