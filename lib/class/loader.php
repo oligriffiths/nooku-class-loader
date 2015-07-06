@@ -85,7 +85,7 @@ class ClassLoader implements ClassLoaderInterface
         $this->registerLocator(new ClassLocatorLibrary($config));
 
         //Register the Nooku\Library namesoace
-        $this->getLocator('library')->registerNamespace(__NAMESPACE__, dirname(dirname(__FILE__)));
+        $this->registerLocatorNamespaces( 'library', [__NAMESPACE__ => dirname(dirname(__FILE__))]);
 
         //Register the loader with the PHP autoloader
         $this->register();
@@ -298,11 +298,17 @@ class ClassLoader implements ClassLoaderInterface
     }
 
     /**
-     * @param $namespace
-     * @param $type
+     * Registers namesapces against a locator
+     *
+     * @param $locator string|ClassLocatorInterface The locator to register namespaces against
+     * @param $namespace array An array where index is the namespace and value is the path
      */
-    public function registerLocatorNamespaces(ClassLocatorInterface $locator, array $namespaces)
+    public function registerLocatorNamespaces($locator, array $namespaces)
     {
+        if( !$locator instanceof ClassLocatorInterface ){
+            $locator = $this->getLocator($locator);
+        }
+
         $name = $locator->getName();
 
         //Ensure locator is register already
@@ -315,7 +321,7 @@ class ClassLoader implements ClassLoaderInterface
             $namespaces = array('*' => null);
         }
 
-        foreach($namespaces as $namespace => $paths) {
+        foreach($namespaces as $namespace => $path) {
 
             $namespace = trim($namespace, '\\');
 
@@ -324,7 +330,7 @@ class ClassLoader implements ClassLoaderInterface
             }
 
             if(!in_array($locator, $this->_namespaces[$namespace])) {
-                $this->_namespaces[$namespace][$name] = $paths;
+                $this->_namespaces[$namespace][$name] = $path;
             }
         }
     }
