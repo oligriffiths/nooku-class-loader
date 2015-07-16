@@ -79,7 +79,7 @@ class ClassLoader implements ClassLoaderInterface
         $this->registerLocator(new ClassLocatorLibrary($config));
 
         //Register the Nooku\Library namesoace
-        $this->registerLocatorNamespaces( 'library', array(__NAMESPACE__ => dirname(dirname(__FILE__))));
+        $this->registerLocatorNamespace('library', __NAMESPACE__, dirname(dirname(__FILE__)));
 
         //Register the loader with the PHP autoloader
         $this->register();
@@ -262,17 +262,19 @@ class ClassLoader implements ClassLoaderInterface
             foreach($this->getLocatorsForClass($class) as $namespace => $locators)
             {
                 // * is a special catch all, extract the namespace from the class
-                if($namespace == '*'){
+                if ($namespace == '*')
+                {
                     $namespace = explode('\\', $class);
                     array_pop($namespace);
                     $namespace = implode('\\', $namespace);
                 }
 
-                foreach($locators as $locator => $path){
-
+                foreach($locators as $locator => $path)
+                {
                     $locator = $this->getLocator($locator);
 
-                    if(false !== $result = $locator->locate($class, $namespace, $path ?: $base)) {
+                    if(false !== $result = $locator->locate($class, $namespace, $path ?: $base))
+                    {
                         break(2);
                     };
                 }
@@ -295,17 +297,19 @@ class ClassLoader implements ClassLoaderInterface
     protected function getLocatorsForClass($class)
     {
         $matched_locators = array();
-        foreach ($this->_namespaces as $namespace => $locators) {
-
-            if ($namespace != '*') {
-
+        foreach ($this->_namespaces as $namespace => $locators)
+        {
+            if ($namespace != '*')
+            {
                 // If class contains a namespace, but namespace is empty, skip
-                if (empty($namespace) && strpos($class, '\\')) {
+                if (empty($namespace) && strpos($class, '\\'))
+                {
                     continue;
                 }
 
                 // If namespace and class doesn't start with namespace
-                if ($namespace && strpos('\\'.$class, '\\'.$namespace) !== 0) {
+                if ($namespace && strpos('\\'.$class, '\\'.$namespace) !== 0)
+                {
                     continue;
                 }
             }
@@ -370,35 +374,56 @@ class ClassLoader implements ClassLoaderInterface
     }
 
     /**
-     * Registers namesapces against a locator
+     * Registers namesapces => paths mapping for a locator
      *
      * @param $locator string|ClassLocatorInterface The locator to register namespaces against
      * @param $namespace array An array where index is the namespace and value is the path
      */
     public function registerLocatorNamespaces($locator, array $namespaces)
     {
-        if( !$locator instanceof ClassLocatorInterface ){
+        if (!$locator instanceof ClassLocatorInterface)
+        {
             $locator = $this->getLocator($locator);
         }
 
         $name = $locator->getName();
 
         //Ensure locator is register already
-        if (!$this->getLocator($name)) {
+        if (!$this->getLocator($name))
+        {
             throw new \InvalidArgumentException('The locator '.$name.' passed to '.__CLASS__.'::'.__FUNCTION__.' is not registered. Please call registerLocator() instead');
         }
 
-        foreach($namespaces as $namespace => $path) {
+        foreach($namespaces as $namespace => $path)
+        {
+            $this->registerLocatorNamespace($locator, $namespace, $path);
+        }
+    }
 
-            $namespace = trim($namespace, '\\');
+    /**
+     * Registers a single namespace to a path for a given locator
+     *
+     * @param $locator string|ClassLocatorInterface The locator to register namespaces against
+     * @param $namespace array An array where index is the namespace and value is the path
+     * @param $path string The file path the namespace is registered to
+     */
+    public function registerLocatorNamespace($locator, $namespace, $path)
+    {
+        if (!$locator instanceof ClassLocatorInterface)
+        {
+            $locator = $this->getLocator($locator);
+        }
 
-            if(!isset($this->_namespaces[$namespace])) {
-                $this->_namespaces[$namespace] = array();
-            }
+        $name = $locator->getName();
+        $namespace = trim($namespace, '\\');
 
-            if(!in_array($locator, $this->_namespaces[$namespace])) {
-                $this->_namespaces[$namespace][$name] = $path;
-            }
+        if(!isset($this->_namespaces[$namespace]))
+        {
+            $this->_namespaces[$namespace] = array();
+        }
+
+        if(!in_array($locator, $this->_namespaces[$namespace])) {
+            $this->_namespaces[$namespace][$name] = $path;
         }
     }
 
