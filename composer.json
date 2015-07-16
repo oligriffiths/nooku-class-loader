@@ -15,6 +15,6 @@
     "php": ">=5.4.0"
   },
   "autoload": {
-    "files": ["lib/class/loader.php"]
+    "files": ["src/loader.php"]
   }
 }
