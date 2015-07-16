@@ -409,6 +409,7 @@ class ClassLoader implements ClassLoaderInterface
             throw new \InvalidArgumentException('The locator '.$name.' passed to '.__CLASS__.'::'.__FUNCTION__.' is not registered. Please call registerLocator() instead');
         }
 
+        // Ensure path exists and is readable
         if (!is_dir($path) || !is_readable($path))
         {
             throw new \InvalidArgumentException('Unable to register locator '.$name.' as path doesn\'t exist or is unreadable: '.$path);
