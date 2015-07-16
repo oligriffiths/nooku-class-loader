@@ -381,19 +381,6 @@ class ClassLoader implements ClassLoaderInterface
      */
     public function registerLocatorNamespaces($locator, array $namespaces)
     {
-        if (!$locator instanceof ClassLocatorInterface)
-        {
-            $locator = $this->getLocator($locator);
-        }
-
-        $name = $locator->getName();
-
-        //Ensure locator is register already
-        if (!$this->getLocator($name))
-        {
-            throw new \InvalidArgumentException('The locator '.$name.' passed to '.__CLASS__.'::'.__FUNCTION__.' is not registered. Please call registerLocator() instead');
-        }
-
         foreach($namespaces as $namespace => $path)
         {
             $this->registerLocatorNamespace($locator, $namespace, $path);
@@ -415,6 +402,18 @@ class ClassLoader implements ClassLoaderInterface
         }
 
         $name = $locator->getName();
+
+        //Ensure locator is register already
+        if (!$this->getLocator($name))
+        {
+            throw new \InvalidArgumentException('The locator '.$name.' passed to '.__CLASS__.'::'.__FUNCTION__.' is not registered. Please call registerLocator() instead');
+        }
+
+        if (!is_dir($path) || !is_readable($path))
+        {
+            throw new \InvalidArgumentException('Unable to register locator '.$name.' as path doesn\'t exist or is unreadable: '.$path);
+        }
+
         $namespace = trim($namespace, '\\');
 
         if(!isset($this->_namespaces[$namespace]))
@@ -506,7 +505,7 @@ class ClassLoader implements ClassLoaderInterface
     public function isDeclared($class)
     {
         return class_exists($class, false)
-            || interface_exists($class, false)
-            || (function_exists('trait_exists') && trait_exists($class, false));
+        || interface_exists($class, false)
+        || (function_exists('trait_exists') && trait_exists($class, false));
     }
 }
