@@ -422,7 +422,8 @@ class ClassLoader implements ClassLoaderInterface
             $this->_namespaces[$namespace] = array();
         }
 
-        if(!in_array($locator, $this->_namespaces[$namespace])) {
+        if(!in_array($locator, $this->_namespaces[$namespace]))
+        {
             $this->_namespaces[$namespace][$name] = $path;
         }
     }
