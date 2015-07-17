@@ -40,6 +40,8 @@ class ClassLoader implements ClassLoaderInterface
     protected $_locators = array();
 
     /**
+     * Namespace => loader => paths map
+     *
      * @var array
      */
     protected $_namespaces = array();
@@ -373,23 +375,28 @@ class ClassLoader implements ClassLoaderInterface
     /**
      * Registers namesapces => paths mapping for a locator
      *
-     * @param $locator string|ClassLocatorInterface The locator to register namespaces against
-     * @param $namespace array An array where index is the namespace and value is the path
+     * @param string|ClassLocatorInterface $locator The locator to register namespaces against
+     * @param array $namespace An array where index is the namespace and value is the path or an array of paths
      */
     public function registerLocatorNamespaces($locator, array $namespaces)
     {
-        foreach($namespaces as $namespace => $path)
+        foreach($namespaces as $namespace => $paths)
         {
-            $this->registerLocatorNamespace($locator, $namespace, $path);
+            $paths = (array) $paths;
+
+            foreach($paths as $path)
+            {
+                $this->registerLocatorNamespace($locator, $namespace, $path);
+            }
         }
     }
 
     /**
      * Registers a single namespace to a path for a given locator
      *
-     * @param $locator string|ClassLocatorInterface The locator to register namespaces against
-     * @param $namespace array An array where index is the namespace and value is the path
-     * @param $path string The file path the namespace is registered to
+     * @param string|ClassLocatorInterface $locator The locator to register namespaces against
+     * @param array $namespace An array where index is the namespace and value is the path
+     * @param string $path The file path the namespace is registered to
      */
     public function registerLocatorNamespace($locator, $namespace, $path)
     {
