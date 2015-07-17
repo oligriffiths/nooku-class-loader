@@ -166,11 +166,12 @@ class ClassLoader implements ClassLoaderInterface
     /**
      * Get the config array
      *
-     * @return array
+     * @param null $key [optional] Lookup specific key in config
+     * @return null
      */
-    public function getConfig()
+    public function getConfig($key = null)
     {
-        return $this->_config;
+        return $key ? (isset($this->_config[$key]) ? $this->_config[$key] : null) : $this->_config;
     }
 
     /**
@@ -181,18 +182,9 @@ class ClassLoader implements ClassLoaderInterface
      */
     public function setConfig(array $config)
     {
-        //Setup class registry
-        if(isset($config['registry']) || isset($config['cache']))
+        if(isset($this->__registry) && isset($config['cache']) && $config['cache'] != $this->getConfig('cache'))
         {
-            if(isset($config['registry']) && !$config['registry'] instanceof ClassRegistryInterface)
-            {
-                throw new \InvalidArgumentException('Class loader registry must implement ClassRegistryInterface');
-            }
-
-            if(isset($this->__registry))
-            {
-                throw new \InvalidArgumentException('Class loader registry can not be changed once initialized');
-            }
+            throw new \InvalidArgumentException('Class loader registry can not be changed once initialized');
         }
 
         //Set the debug mode
@@ -269,14 +261,19 @@ class ClassLoader implements ClassLoaderInterface
                     $namespace = implode('\\', $namespace);
                 }
 
-                foreach($locators as $locator => $path)
+                foreach($locators as $locator => $paths)
                 {
                     $locator = $this->getLocator($locator);
 
-                    if(false !== $result = $locator->locate($class, $namespace, $path ?: $base))
+                    foreach ($paths as $path)
                     {
-                        break(2);
-                    };
+                        $result = $locator->locate($class, $namespace, $path ?: $base);
+
+                        if($result !== false && file_exists($result))
+                        {
+                            break(3);
+                        };
+                    }
                 }
             }
 
@@ -422,9 +419,14 @@ class ClassLoader implements ClassLoaderInterface
             $this->_namespaces[$namespace] = array();
         }
 
-        if(!in_array($locator, $this->_namespaces[$namespace]))
+        if(!isset($this->_namespaces[$namespace][$name]))
         {
-            $this->_namespaces[$namespace][$name] = $path;
+            $this->_namespaces[$namespace][$name] = array();
+        }
+
+        if(!in_array($path, $this->_namespaces[$namespace][$name]))
+        {
+            $this->_namespaces[$namespace][$name][] = $path;
         }
     }
 
