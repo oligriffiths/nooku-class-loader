@@ -5,7 +5,7 @@ if (!class_exists('ComposerAutoloaderFixture', false)) {
     {
         public function findFile($class)
         {
-            return $class;
+            return str_replace('\\', '/', $class).'.php';
         }
     }
 }
