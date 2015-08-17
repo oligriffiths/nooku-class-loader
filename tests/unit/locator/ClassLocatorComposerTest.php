@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__.'/../../src/class/locator/interface.php';
-require_once __DIR__.'/../../src/class/locator/abstract.php';
-require_once __DIR__.'/../../src/class/locator/composer.php';
+require_once __DIR__.'/../../../src/class/locator/interface.php';
+require_once __DIR__.'/../../../src/class/locator/abstract.php';
+require_once __DIR__.'/../../../src/class/locator/composer.php';
 
 class ClassLocatorComposerTest extends PHPUnit_Framework_TestCase
 {
@@ -14,7 +14,7 @@ class ClassLocatorComposerTest extends PHPUnit_Framework_TestCase
     public function setup()
     {
         $this->_locator = new Nooku\Library\ClassLocatorComposer(array(
-            'vendor_path' => dirname(__DIR__).'/fixtures/composer'
+            'vendor_path' => dirname(dirname(__DIR__)).'/fixtures/composer'
         ));
     }
 
