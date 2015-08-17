@@ -9,13 +9,13 @@
 
 namespace Nooku\Library;
 
-require_once dirname(__FILE__) . '/interface.php';
-require_once dirname(__FILE__) . '/locator/interface.php';
-require_once dirname(__FILE__) . '/locator/abstract.php';
-require_once dirname(__FILE__) . '/locator/library.php';
-require_once dirname(__FILE__) . '/registry/interface.php';
-require_once dirname(__FILE__) . '/registry/registry.php';
-require_once dirname(__FILE__) . '/registry/cache.php';
+require_once dirname(__FILE__).'/interface.php';
+require_once dirname(__FILE__).'/locator/interface.php';
+require_once dirname(__FILE__).'/locator/abstract.php';
+require_once dirname(__FILE__).'/locator/library.php';
+require_once dirname(__FILE__).'/registry/interface.php';
+require_once dirname(__FILE__).'/registry/registry.php';
+require_once dirname(__FILE__).'/registry/cache.php';
 
 /**
  * Class Loader
@@ -87,16 +87,6 @@ class ClassLoader implements ClassLoaderInterface
     }
 
     /**
-     * Clone
-     *
-     * Prevent creating clones of this class
-     */
-    final private function __clone()
-    {
-        throw new \Exception("An instance of ".get_called_class()." cannot be cloned.");
-    }
-
-    /**
      * Force creation of a singleton
      *
      * @param  array  $config An optional array with configuration options.
@@ -152,7 +142,7 @@ class ClassLoader implements ClassLoaderInterface
         {
             if (!in_array($path, get_included_files()) && file_exists($path))
             {
-                require_once $path;
+                require $path;
 
                 if($this->_debug)
                 {
@@ -313,7 +303,8 @@ class ClassLoader implements ClassLoaderInterface
      */
     public function setDebug($debug)
     {
-        return $this->_debug = (bool) $debug;
+        $this->_debug = (bool) $debug;
+        return $this;
     }
 
     /**
@@ -337,5 +328,15 @@ class ClassLoader implements ClassLoaderInterface
         return class_exists($class, false)
             || interface_exists($class, false)
             || (function_exists('trait_exists') && trait_exists($class, false));
+    }
+
+    /**
+     * Clone
+     *
+     * Prevent creating clones of this class
+     */
+    final private function __clone()
+    {
+        throw new \Exception("An instance of ".get_called_class()." cannot be cloned.");
     }
 }
