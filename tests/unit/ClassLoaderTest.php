@@ -19,7 +19,7 @@ class ClassLoaderTest extends PHPUnit_Framework_TestCase
         //Add fixture locator
         $this->_loader->registerLocator(new LocatorFixture(array(
             'namespaces' => array(
-                'Fixture' => dirname(__DIR__).'/fixtures/classes/'
+                'Fixture' => dirname(__DIR__).'/fixtures/classes/fixture/'
             )
         )));
     }
@@ -74,7 +74,7 @@ class ClassLoaderTest extends PHPUnit_Framework_TestCase
      */
     public function testGetPath()
     {
-        $this->assertEquals(dirname(__DIR__).'/fixtures/classes/loader.php', $this->_loader->getPath('Fixture\\Loader'));
+        $this->assertEquals(dirname(__DIR__).'/fixtures/classes/fixture/loader.php', $this->_loader->getPath('Fixture\\Loader'));
     }
 
     /**
