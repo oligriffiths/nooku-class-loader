@@ -2,7 +2,7 @@
 
 use Nooku\Library;
 
-class LocatorFixture extends Library\ClassLocatorAbstract
+class ClassLocatorFixture extends Library\ClassLocatorAbstract
 {
     /**
      * The locator name

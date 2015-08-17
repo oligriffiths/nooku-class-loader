@@ -17,7 +17,7 @@ class ClassLoaderTest extends PHPUnit_Framework_TestCase
         $this->_loader = Nooku\Library\ClassLoader::getInstance();
 
         //Add fixture locator
-        $this->_loader->registerLocator(new LocatorFixture(array(
+        $this->_loader->registerLocator(new ClassLocatorFixture(array(
             'namespaces' => array(
                 'Fixture' => dirname(__DIR__).'/fixtures/classes/fixture/'
             )
@@ -96,9 +96,9 @@ class ClassLoaderTest extends PHPUnit_Framework_TestCase
     {
         $this->assertNull($this->_loader->getLocator('stub'));
 
-        $this->_loader->registerLocator(new LocatorStub());
+        $this->_loader->registerLocator(new ClassLocatorStub());
 
-        $this->assertInstanceof('LocatorStub', $this->_loader->getLocator('stub'));
+        $this->assertInstanceof('ClassLocatorStub', $this->_loader->getLocator('stub'));
     }
 
     /**
@@ -145,7 +145,7 @@ class ClassLoaderTest extends PHPUnit_Framework_TestCase
      */
     public function testIsDeclared()
     {
-        $this->assertTrue($this->_loader->isDeclared('LocatorFixture'));
+        $this->assertTrue($this->_loader->isDeclared('ClassLocatorFixture'));
         $this->assertFalse($this->_loader->isDeclared('FooBarBaz'));
     }
 
