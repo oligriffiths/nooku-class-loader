@@ -17,6 +17,10 @@ class ClassRegistryCacheTest extends PHPUnit_Framework_TestCase
     {
         $this->_registry = new Nooku\Library\ClassRegistryCache();
         $this->_registry->setNamespace('phpunit');
+
+        if (!Nooku\Library\ClassRegistryCache::isSupported() || !ini_get('apc.enable_cli')) {
+            $this->markTestSkipped('must be revisited.');
+        }
     }
 
     /**
