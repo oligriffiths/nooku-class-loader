@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__.'/../../src/class/locator/interface.php';
-require_once __DIR__.'/../../src/class/locator/abstract.php';
-require_once __DIR__.'/../../src/class/locator/library.php';
+require_once __DIR__.'/../../../src/class/locator/interface.php';
+require_once __DIR__.'/../../../src/class/locator/abstract.php';
+require_once __DIR__.'/../../../src/class/locator/library.php';
 
 class ClassLocatorLibraryTest extends PHPUnit_Framework_TestCase
 {
@@ -15,7 +15,7 @@ class ClassLocatorLibraryTest extends PHPUnit_Framework_TestCase
     {
         $this->_locator = new Nooku\Library\ClassLocatorLibrary(array(
             'namespaces' => array(
-                'Nooku\\Library' => dirname(__DIR__).'/fixtures/classes/library'
+                'Nooku\\Library' => dirname(dirname(__DIR__)).'/fixtures/classes/library'
             )
         ));
     }
@@ -33,7 +33,7 @@ class ClassLocatorLibraryTest extends PHPUnit_Framework_TestCase
      */
     public function testLocate()
     {
-        $basedir = dirname(__DIR__).'/fixtures/classes/library';
+        $basedir = dirname(dirname(__DIR__)).'/fixtures/classes/library';
 
         $this->assertEquals($basedir.'/class/loader.php', $this->_locator->locate('Nooku\Library\ClassLoader', null));
         $this->assertEquals($basedir.'/object/object.php', $this->_locator->locate('Nooku\Library\Object', null));
@@ -44,7 +44,7 @@ class ClassLocatorLibraryTest extends PHPUnit_Framework_TestCase
      */
     public function testLocateException()
     {
-        $basedir = dirname(__DIR__).'/fixtures/classes/library';
+        $basedir = dirname(dirname(__DIR__)).'/fixtures/classes/library';
 
         $this->assertEquals($basedir.'/database/exception/connection.php', $this->_locator->locate('Nooku\Library\DatabaseExceptionConnection', null));
     }

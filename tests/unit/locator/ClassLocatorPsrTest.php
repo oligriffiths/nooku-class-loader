@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__.'/../../src/class/locator/interface.php';
-require_once __DIR__.'/../../src/class/locator/abstract.php';
-require_once __DIR__.'/../../src/class/locator/psr.php';
+require_once __DIR__.'/../../../src/class/locator/interface.php';
+require_once __DIR__.'/../../../src/class/locator/abstract.php';
+require_once __DIR__.'/../../../src/class/locator/psr.php';
 
 class ClassLocatorPsrTest extends PHPUnit_Framework_TestCase
 {
@@ -15,7 +15,7 @@ class ClassLocatorPsrTest extends PHPUnit_Framework_TestCase
     {
         $this->_locator = new Nooku\Library\ClassLocatorPsr(array(
             'namespaces' => array(
-                'Psr' => dirname(__DIR__).'/fixtures/classes/psr'
+                'Psr' => dirname(dirname(__DIR__)).'/fixtures/classes/psr'
             )
         ));
     }
@@ -33,7 +33,7 @@ class ClassLocatorPsrTest extends PHPUnit_Framework_TestCase
      */
     public function testLocate()
     {
-        $basedir = dirname(__DIR__).'/fixtures/classes/psr';
+        $basedir = dirname(dirname(__DIR__)).'/fixtures/classes/psr';
 
         $this->assertEquals($basedir.'/Foo/Bar/Baz.php', $this->_locator->locate('Psr\Foo\Bar\Baz', null));
         $this->assertEquals($basedir.'/Foo/BarBaz.php', $this->_locator->locate('Psr\Foo\BarBaz', null));

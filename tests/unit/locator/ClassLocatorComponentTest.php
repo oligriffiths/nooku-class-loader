@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__.'/../../src/class/locator/interface.php';
-require_once __DIR__.'/../../src/class/locator/abstract.php';
-require_once __DIR__.'/../../src/class/locator/component.php';
+require_once __DIR__.'/../../../src/class/locator/interface.php';
+require_once __DIR__.'/../../../src/class/locator/abstract.php';
+require_once __DIR__.'/../../../src/class/locator/component.php';
 
 class ClassLocatorComponentTest extends PHPUnit_Framework_TestCase
 {
@@ -15,7 +15,7 @@ class ClassLocatorComponentTest extends PHPUnit_Framework_TestCase
     {
         $this->_locator = new Nooku\Library\ClassLocatorComponent(array(
             'namespaces' => array(
-                'Fixture\\Component\\Foo' => dirname(__DIR__).'/fixtures/classes/component/foo'
+                'Fixture\\Component\\Foo' => dirname(dirname(__DIR__)).'/fixtures/classes/component/foo'
             )
         ));
     }
@@ -33,7 +33,7 @@ class ClassLocatorComponentTest extends PHPUnit_Framework_TestCase
      */
     public function testLocate()
     {
-        $basedir = dirname(__DIR__).'/fixtures/classes/component/foo';
+        $basedir = dirname(dirname(__DIR__)).'/fixtures/classes/component/foo';
 
         $this->assertEquals($basedir.'/controller/bar.php', $this->_locator->locate('Fixture\Component\Foo\ControllerBar', null));
         $this->assertEquals($basedir.'/controller/baz/baz.php', $this->_locator->locate('Fixture\Component\Foo\ControllerBaz', null));
@@ -44,7 +44,7 @@ class ClassLocatorComponentTest extends PHPUnit_Framework_TestCase
      */
     public function testLocateException()
     {
-        $basedir = dirname(__DIR__).'/fixtures/classes/component/foo';
+        $basedir = dirname(dirname(__DIR__)).'/fixtures/classes/component/foo';
 
         $this->assertEquals($basedir.'/controller/exception/unauthorized.php', $this->_locator->locate('Fixture\Component\Foo\ControllerExceptionUnauthorized', null));
     }
