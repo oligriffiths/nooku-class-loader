@@ -92,9 +92,9 @@ The ClassLoader can take an `$options` array as the only argument. There are 3 o
 
 ```php
 $options = [
-    'cache' => true | false,                    // Enables an APC cache of class => file path mappings
+    'cache' => true | false,    // Enables an APC cache of class => file path mappings
     'cache_namespace' => 'a namespace for APC', // Sets a namespace for the cache
-    'debug' => true | false,                    // Enables/disabled debugging
+    'debug' => true | false,    // Enables/disabled debugging
 ];
 
 ## API
