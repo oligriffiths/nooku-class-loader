@@ -3,7 +3,7 @@
 ![TravisCI](https://travis-ci.org/oligriffiths/nooku-class-loader.svg)
 
 The nooku class loader is PHP autoloader that allows multiple `locators` to be registered and called 
-squentially when a class is request.
+squentially when a class is requested.
 
 The class loader is registered via the `spl_autoload_register()` PHP function.
 
