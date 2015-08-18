@@ -85,7 +85,7 @@ $loader->registerLocator(
 );
 ```
 
-Now, whenever a a new unkown class is instantiated, the custom locator will be called to try and locate
+Now, whenever a new unkown class is instantiated, the custom locator will be called to try and locate
 the file path. Once a file path has been located, other locators are not called.
 
 The ClassLoader can take an `$options` array as the only argument. There are 3 options that can be set:
