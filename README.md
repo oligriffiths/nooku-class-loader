@@ -96,6 +96,7 @@ $options = [
     'cache_namespace' => 'a namespace for APC', // Sets a namespace for the cache
     'debug' => true | false,    // Enables/disabled debugging
 ];
+```
 
 ## API
 
