@@ -8,7 +8,7 @@
 
 namespace Fixture\Component\Foo;
 
-class ControllerExceptionUnauthorized
+class ControllerExceptionNotFound
 {
 
 }
