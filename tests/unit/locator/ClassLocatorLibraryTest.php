@@ -46,6 +46,6 @@ class ClassLocatorLibraryTest extends PHPUnit_Framework_TestCase
     {
         $basedir = dirname(dirname(__DIR__)).'/fixtures/classes/library';
 
-        $this->assertEquals($basedir.'/database/exception/connection.php', $this->_locator->locate('Nooku\Library\DatabaseExceptionConnection', null));
+        $this->assertEquals($basedir.'/database/exception/notfound.php', $this->_locator->locate('Nooku\Library\DatabaseExceptionNotFound', null));
     }
 }

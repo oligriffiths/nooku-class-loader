@@ -40,12 +40,16 @@ class ClassLocatorComponentTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the loader to ensure it locates the correct path
+     * Tests the loader to ensure it locates the correct exception path
+     * Exceptions are different, the class name after Exception is all lowercased, e.g:
+     *
+     * ControllerExceptionNotFound => ControllerExceptionNotfound => controller/exception/notfound.php
+     *
      */
     public function testLocateException()
     {
         $basedir = dirname(dirname(__DIR__)).'/fixtures/classes/component/foo';
 
-        $this->assertEquals($basedir.'/controller/exception/unauthorized.php', $this->_locator->locate('Fixture\Component\Foo\ControllerExceptionUnauthorized', null));
+        $this->assertEquals($basedir.'/controller/exception/notfound.php', $this->_locator->locate('Fixture\Component\Foo\ControllerExceptionNotFound', null));
     }
 }
