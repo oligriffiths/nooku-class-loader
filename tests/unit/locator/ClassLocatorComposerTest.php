@@ -32,6 +32,6 @@ class ClassLocatorComposerTest extends PHPUnit_Framework_TestCase
     public function testLocate()
     {
         // This is a simple test to ensure the proxying is working, not testing actual composer
-        $this->assertEquals('Psr/Foo/Bar/Baz.php', $this->_locator->locate('Psr\Foo\Bar\Baz', null));
+        $this->assertEquals('Psr/Foo/Bar/Baz.php', $this->_locator->locate('Psr\Foo\Bar\Baz', 'Psr\Foo\Bar', null));
     }
 }

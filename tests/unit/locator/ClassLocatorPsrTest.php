@@ -35,7 +35,7 @@ class ClassLocatorPsrTest extends PHPUnit_Framework_TestCase
     {
         $basedir = dirname(dirname(__DIR__)).'/fixtures/classes/psr';
 
-        $this->assertEquals($basedir.'/Foo/Bar/Baz.php', $this->_locator->locate('Psr\Foo\Bar\Baz', null));
-        $this->assertEquals($basedir.'/Foo/BarBaz.php', $this->_locator->locate('Psr\Foo\BarBaz', null));
+        $this->assertEquals($basedir.'/Foo/Bar/Baz.php', $this->_locator->locate('Psr\Foo\Bar\Baz', 'Psr', $basedir));
+        $this->assertEquals($basedir.'/Foo/BarBaz.php', $this->_locator->locate('Psr\Foo\BarBaz', 'Psr', $basedir));
     }
 }

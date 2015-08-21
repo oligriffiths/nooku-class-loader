@@ -28,31 +28,24 @@ class ClassLocatorPsr extends ClassLocatorAbstract
     protected static $_name = 'psr';
 
     /**
-     * Get the path based on a class name
+     * Get a fully qualified path based on a class name
      *
-     * @param  string $class     The class name
-     * @param  string $basepath  The base path
-     * @return string|boolean   Returns the path on success FALSE on failure
+     * @param  string $class    The class name
+     * @param  string $namespace The namespace/prefix the class was matched against
+     * @param  string $basepath The basepath to use to find the class
+     * @return string|false     Returns canonicalized absolute pathname or FALSE of the class could not be found.
      */
-    public function locate($class, $basepath = null)
+    public function locate($class, $namespace, $basepath)
     {
+        //Remove the namespace from the class name
+        $class = trim(substr($class, strlen($namespace)), '\\');
+
         //Find the class
-        foreach($this->getNamespaces() as $prefix => $basepath)
-        {
-            if(strpos('\\'.$class, '\\'.$prefix) !== 0) {
-                continue;
-            }
+        $path = str_replace(array('\\', '_'), DIRECTORY_SEPARATOR, $class) . '.php';
 
-            if (strpos($class, $prefix) === 0) {
-                $class = trim(substr($class, strlen($prefix)), '\\');
-            }
-
-            $path = str_replace(array('\\', '_'), DIRECTORY_SEPARATOR, $class) . '.php';
-
-            $file = $basepath.'/'.$path;
-            if (is_file($file)) {
-                return $file;
-            }
+        $file = $basepath.'/'.$path;
+        if (is_file($file)) {
+            return $file;
         }
 
         return false;

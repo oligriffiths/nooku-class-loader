@@ -97,7 +97,7 @@ class ClassLoader implements ClassLoaderInterface
     {
         static $instance;
 
-        if ($instance === NULL) {
+        if($instance === NULL) {
             $instance = new self($config);
         }
 
@@ -170,7 +170,7 @@ class ClassLoader implements ClassLoaderInterface
      * Set the config array
      *
      * @param array $config
-     * @throw \InvalidArgumentException if setting cache key and registry already initialized
+     * @throw \InvalidArgumentException ifsetting cache key and registry already initialized
      */
     public function setConfig(array $config)
     {
@@ -192,8 +192,8 @@ class ClassLoader implements ClassLoaderInterface
      * Load a class based on a class name
      *
      * @param string  $class    The class name
-     * @throws \RuntimeException If debug is enabled and the class could not be found in the file.
-     * @return boolean  Returns TRUE if the class could be loaded, otherwise returns FALSE.
+     * @throws \RuntimeException ifdebug is enabled and the class could not be found in the file.
+     * @return boolean  Returns TRUE ifthe class could be loaded, otherwise returns FALSE.
      */
     public function load($class)
     {
@@ -202,9 +202,9 @@ class ClassLoader implements ClassLoaderInterface
         //Get the path
         $path = $this->getPath( $class, $this->_base_path);
 
-        if ($path !== false)
+        if($path !== false)
         {
-            if (!in_array($path, get_included_files()) && file_exists($path))
+            if(!in_array($path, get_included_files()) && file_exists($path))
             {
                 $result = true;
 
@@ -231,7 +231,7 @@ class ClassLoader implements ClassLoaderInterface
      * Get the path based on a class name
      *
      * @param string $class    The class name
-     * @param string $base     The base_path. If NULL the global base path will be used.
+     * @param string $base     The base_path. ifNULL the global base path will be used.
      * @return string|boolean  Returns canonicalized absolute pathname or FALSE of the class could not be found.
      */
     public function getPath($class, $base = null)
@@ -247,7 +247,7 @@ class ClassLoader implements ClassLoaderInterface
             foreach($this->getLocatorsForClass($class) as $namespace => $locators)
             {
                 // * is a special catch all, extract the namespace from the class
-                if ($namespace == '*')
+                if($namespace == '*')
                 {
                     $namespace = explode('\\', $class);
                     array_pop($namespace);
@@ -258,7 +258,7 @@ class ClassLoader implements ClassLoaderInterface
                 {
                     $locator = $this->getLocator($locator);
 
-                    foreach ($paths as $path)
+                    foreach($paths as $path)
                     {
                         $result = $locator->locate($class, $namespace, $path ?: $base);
 
@@ -270,12 +270,28 @@ class ClassLoader implements ClassLoaderInterface
                 }
             }
 
-            //Also store if the class could not be found to prevent repeated lookups.
+            //Also store ifthe class could not be found to prevent repeated lookups.
             $this->getRegistry()->set($key, $result);
 
         } else $result = $this->getRegistry()->get($key);
 
         return $result;
+    }
+
+    /**
+     * Get the path based on a class name
+     *
+     * @param string $class     The class name
+     * @param string $path      The class path
+     * @param string $namespace The global namespace. ifNULL the active global namespace will be used.
+     * @return void
+     */
+    public function setPath($class, $path, $base = null)
+    {
+        $base = $base ? $base : $this->_base_path;
+        $key  = $base ? $class.'-'.$base : $class;
+
+        $this->getRegistry()->set($key, $path);
     }
 
     /**
@@ -287,18 +303,18 @@ class ClassLoader implements ClassLoaderInterface
     protected function getLocatorsForClass($class)
     {
         $matched_locators = array();
-        foreach ($this->_namespaces as $namespace => $locators)
+        foreach($this->_namespaces as $namespace => $locators)
         {
-            if ($namespace != '*')
+            if($namespace != '*')
             {
-                // If class contains a namespace, but namespace is empty, skip
-                if (empty($namespace) && strpos($class, '\\'))
+                // ifclass contains a namespace, but namespace is empty, skip
+                if(empty($namespace) && strpos($class, '\\'))
                 {
                     continue;
                 }
 
-                // If namespace and class doesn't start with namespace
-                if ($namespace && strpos('\\'.$class, '\\'.$namespace) !== 0)
+                // ifnamespace and class doesn't start with namespace
+                if($namespace && strpos('\\'.$class, '\\'.$namespace) !== 0)
                 {
                     continue;
                 }
@@ -311,26 +327,10 @@ class ClassLoader implements ClassLoaderInterface
     }
 
     /**
-     * Get the path based on a class name
-     *
-     * @param string $class     The class name
-     * @param string $path      The class path
-     * @param string $namespace The global namespace. If NULL the active global namespace will be used.
-     * @return void
-     */
-    public function setPath($class, $path, $base = null)
-    {
-        $base = $base ? $base : $this->_base_path;
-        $key  = $base ? $class.'-'.$base : $class;
-
-        $this->getRegistry()->set($key, $path);
-    }
-
-    /**
      * Register a class locator
      *
      * @param  ClassLocatorInterface $locator
-     * @param  bool $prepend If true, the locator will be prepended instead of appended.
+     * @param  bool $prepend iftrue, the locator will be prepended instead of appended.
      * @return void
      */
     public function registerLocator(ClassLocatorInterface $locator, $prepend = false )
@@ -350,7 +350,7 @@ class ClassLoader implements ClassLoaderInterface
      * Get a registered class locator based on his type
      *
      * @param string $type The locator type
-     * @return ClassLocatorInterface|null  Returns the object locator or NULL if it cannot be found.
+     * @return ClassLocatorInterface|null  Returns the object locator or NULL ifit cannot be found.
      */
     public function getLocator($type)
     {
@@ -391,21 +391,21 @@ class ClassLoader implements ClassLoaderInterface
      */
     public function registerLocatorNamespace($locator, $namespace, $path)
     {
-        if (!$locator instanceof ClassLocatorInterface)
+        if(!$locator instanceof ClassLocatorInterface)
         {
             $locator = $this->getLocator($locator);
         }
 
         $name = $locator->getName();
 
-        //Ensure locator is register already
-        if (!$this->getLocator($name))
+        //Ensure locator is registered already
+        if(!$this->getLocator($name))
         {
             throw new \InvalidArgumentException('The locator '.$name.' passed to '.__CLASS__.'::'.__FUNCTION__.' is not registered. Please call registerLocator() instead');
         }
 
         // Ensure path exists and is readable
-        if (!is_dir($path) || !is_readable($path))
+        if(!is_dir($path) || !is_readable($path))
         {
             throw new \InvalidArgumentException('Unable to register locator '.$name.' as path doesn\'t exist or is unreadable: '.$path);
         }
@@ -426,6 +426,42 @@ class ClassLoader implements ClassLoaderInterface
         {
             $this->_namespaces[$namespace][$name][] = $path;
         }
+    }
+
+    /**
+     * Gets the paths for a given namespace
+     *
+     * @param null|string $namespace The namespace for the paths
+     * @param null|string $locator The paths for a specific locator
+     * @return array
+     */
+    public function getNamespacePaths($namespace = null, $locator = null)
+    {
+        if($namespace && $locator)
+        {
+            return isset($this->_namespaces[$namespace][$locator]) ? $this->_namespaces[$namespace][$locator] : array();
+        }
+
+        if($namespace)
+        {
+            return isset($this->_namespaces[$namespace]) ? $this->_namespaces[$namespace] : array();
+        }
+
+        if($locator)
+        {
+            $namespaces = array();
+            foreach($this->_namespaces as $namespace => $locators)
+            {
+                if(isset($locators[$locator]))
+                {
+                    $namespaces[$namespace] = $locators[$locator];
+                }
+            }
+
+            return $namespaces;
+        }
+
+        return array();
     }
 
     /**
@@ -478,7 +514,7 @@ class ClassLoader implements ClassLoaderInterface
     /**
      * Enable or disable class loading
      *
-     * If debug is enabled the class loader will throw an exception if a file is found but does not declare the class.
+     * ifdebug is enabled the class loader will throw an exception ifa file is found but does not declare the class.
      *
      * @param bool $debug True or false.
      * @return ClassLoader
@@ -490,7 +526,7 @@ class ClassLoader implements ClassLoaderInterface
     }
 
     /**
-     * Check if the loader is running in debug mode
+     * Check ifthe loader is running in debug mode
      *
      * @return bool
      */
@@ -500,7 +536,7 @@ class ClassLoader implements ClassLoaderInterface
     }
 
     /**
-     * Tells if a class, interface or trait exists.
+     * Tells ifa class, interface or trait exists.
      *
      * @params string $class
      * @return boolean

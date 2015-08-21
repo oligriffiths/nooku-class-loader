@@ -19,7 +19,7 @@ class ClassLoaderTest extends PHPUnit_Framework_TestCase
         //Add fixture locator
         $this->_loader->registerLocator(new ClassLocatorFixture(array(
             'namespaces' => array(
-                'Fixture' => dirname(__DIR__).'/fixtures/classes/fixture/'
+                'Fixture' => dirname(__DIR__).'/fixtures/classes/fixture/',
             )
         )));
     }
@@ -158,5 +158,81 @@ class ClassLoaderTest extends PHPUnit_Framework_TestCase
         $method = $reflection->getMethod('__clone');
 
         $this->assertTrue($method->isPrivate());
+    }
+
+    /**
+     * Tests registering multiple namespaces and multiple paths
+     */
+    public function testRegisterLocatorNamespaces()
+    {
+        $this->_loader->registerLocatorNamespaces('library', array(
+            'Fake\\Namespace\\One' => array(
+                __DIR__,
+                dirname(__DIR__),
+            ),
+
+            'Fake\\Namespace\\Two' => array(
+                dirname(__DIR__).'/fixtures',
+                dirname(__DIR__).'/unit',
+            )
+        ));
+
+        $this->assertContains(__DIR__, $this->_loader->getNamespacePaths('Fake\\Namespace\\One', 'library'));
+        $this->assertContains(dirname(__DIR__), $this->_loader->getNamespacePaths('Fake\\Namespace\\One', 'library'));
+
+        $this->assertContains(dirname(__DIR__).'/fixtures', $this->_loader->getNamespacePaths('Fake\\Namespace\\Two', 'library'));
+        $this->assertContains(dirname(__DIR__).'/unit', $this->_loader->getNamespacePaths('Fake\\Namespace\\Two', 'library'));
+    }
+
+    /**
+     * Tests registering a single namespace to a single path
+     */
+    public function testRegisternamespace()
+    {
+        $this->_loader->registerLocatorNamespace('library', 'Another\\Fake\\Namespace', __DIR__);
+
+        $this->assertContains(__DIR__, $this->_loader->getNamespacePaths('Another\\Fake\\Namespace', 'library'));
+    }
+
+    /**
+     * Tests the registered namespaces resolve to the correct file paths
+     */
+    public function testGetNamespacePaths()
+    {
+        $fixture_path = dirname(__DIR__).'/fixtures/classes/fixture/';
+        $library_path = dirname(dirname(__DIR__)).'/src';
+
+        // Get namespace path
+        $namespaces = $this->_loader->getNamespacePaths('Fixture');
+        $this->assertArrayHasKey('fixture', $namespaces);
+        $this->assertContains($fixture_path, $namespaces['fixture']);
+
+        $namespaces = $this->_loader->getNamespacePaths('Nooku\\Library');
+        $this->assertArrayHasKey('library', $namespaces);
+        $this->assertContains($library_path, $namespaces['library']);
+
+        // Get locator namespaces
+        $locator = $this->_loader->getNamespacePaths(null, 'fixture');
+        $this->assertArrayHasKey('Fixture', $locator);
+        $this->assertContains($fixture_path, $locator['Fixture']);
+
+        $locator = $this->_loader->getNamespacePaths(null, 'library');
+        $this->assertArrayHasKey('Nooku\\Library', $locator);
+        $this->assertContains($library_path, $locator['Nooku\\Library']);
+
+        // Get namespace & locator paths
+        $paths = $this->_loader->getNamespacePaths('Fixture', 'fixture');
+        $this->assertContains($fixture_path, $paths);
+
+        $paths = $this->_loader->getNamespacePaths('Nooku\\Library', 'library');
+        $this->assertContains($library_path, $paths);
+
+        // Nonexistant namespace
+        $paths = $this->_loader->getNamespacePaths('Something', 'library');
+        $this->assertEmpty($paths);
+
+        // Nonexistant locator
+        $paths = $this->_loader->getNamespacePaths('Nooku\\Library', 'missing');
+        $this->assertEmpty($paths);
     }
 }

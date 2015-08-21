@@ -35,8 +35,8 @@ class ClassLocatorComponentTest extends PHPUnit_Framework_TestCase
     {
         $basedir = dirname(dirname(__DIR__)).'/fixtures/classes/component/foo';
 
-        $this->assertEquals($basedir.'/controller/bar.php', $this->_locator->locate('Fixture\Component\Foo\ControllerBar', null));
-        $this->assertEquals($basedir.'/controller/baz/baz.php', $this->_locator->locate('Fixture\Component\Foo\ControllerBaz', null));
+        $this->assertEquals($basedir.'/controller/bar.php', $this->_locator->locate('Fixture\Component\Foo\ControllerBar', 'Fixture\Component\Foo', $basedir));
+        $this->assertEquals($basedir.'/controller/baz/baz.php', $this->_locator->locate('Fixture\Component\Foo\ControllerBaz', 'Fixture\Component\Foo', $basedir));
     }
 
     /**
@@ -50,6 +50,6 @@ class ClassLocatorComponentTest extends PHPUnit_Framework_TestCase
     {
         $basedir = dirname(dirname(__DIR__)).'/fixtures/classes/component/foo';
 
-        $this->assertEquals($basedir.'/controller/exception/notfound.php', $this->_locator->locate('Fixture\Component\Foo\ControllerExceptionNotFound', null));
+        $this->assertEquals($basedir.'/controller/exception/notfound.php', $this->_locator->locate('Fixture\Component\Foo\ControllerExceptionNotFound', 'Fixture\Component\Foo', $basedir));
     }
 }

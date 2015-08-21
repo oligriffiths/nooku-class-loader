@@ -67,7 +67,33 @@ interface ClassLoaderInterface
      * @param  bool $prepend If true, the locator will be prepended instead of appended.
      * @return void
      */
-    public function registerLocator(ClassLocatorInterface $locator, $prepend = false );
+    public function registerLocator(ClassLocatorInterface $locator, $prepend = false);
+
+    /**
+     * Registers namesapces => paths mapping for a locator
+     *
+     * @param string|ClassLocatorInterface $locator The locator to register namespaces against
+     * @param array $namespace An array where index is the namespace and value is the path or an array of paths
+     */
+    public function registerLocatorNamespaces($locator, array $namespaces);
+
+    /**
+     * Registers a single namespace to a path for a given locator
+     *
+     * @param string|ClassLocatorInterface $locator The locator to register namespaces against
+     * @param array $namespace An array where index is the namespace and value is the path
+     * @param string $path The file path the namespace is registered to
+     */
+    public function registerLocatorNamespace($locator, $namespace, $path);
+
+    /**
+     * Gets the paths for a given namespace
+     *
+     * @param null|string $namespace The namespace for the paths
+     * @param null|string $locator The paths for a specific locator
+     * @return array
+     */
+    public function getNamespacePaths($namespace = null, $locator = null);
 
     /**
      * Get a registered class locator based on his type

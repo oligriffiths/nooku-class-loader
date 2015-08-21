@@ -45,15 +45,4 @@ class ClassLocatorTest extends PHPUnit_Framework_TestCase
         $this->assertContains('/path/to/namespace', $namespaces);
         $this->assertArrayHasKey('The\\Namespace', $namespaces);
     }
-    /**
-     * Tests registering a namespace to a path
-     */
-    public function testRegisternamespace()
-    {
-        $this->_locator->registerNamespace('SomeNamespace', '/path/to/namespace');
-
-        $this->assertEquals('/path/to/namespace', $this->_locator->getNamespace('SomeNamespace'));
-        $this->assertNotEquals('incorrect/path', $namespaces = $this->_locator->getNamespace('SomeNamespace'));
-        $this->assertFalse($this->_locator->getNamespace('InvalidNamespace'));
-    }
 }
