@@ -1,9 +1,5 @@
 <?php
 
-require_once __DIR__.'/../../../src/class/locator/interface.php';
-require_once __DIR__.'/../../../src/class/locator/abstract.php';
-require_once __DIR__.'/../../../src/class/locator/composer.php';
-
 class ClassLocatorComposerTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -33,5 +29,6 @@ class ClassLocatorComposerTest extends PHPUnit_Framework_TestCase
     {
         // This is a simple test to ensure the proxying is working, not testing actual composer
         $this->assertEquals('Psr/Foo/Bar/Baz.php', $this->_locator->locate('Psr\Foo\Bar\Baz', null));
+        $this->assertEquals('Psr/Foo/BarBaz.php', $this->_locator->locate('Psr\Foo\BarBaz', null));
     }
 }

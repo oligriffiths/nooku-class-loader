@@ -1,9 +1,5 @@
 <?php
 
-require_once __DIR__.'/../../../src/class/locator/interface.php';
-require_once __DIR__.'/../../../src/class/locator/abstract.php';
-require_once __DIR__.'/../../../src/class/locator/component.php';
-
 class ClassLocatorComponentTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -11,11 +7,19 @@ class ClassLocatorComponentTest extends PHPUnit_Framework_TestCase
      */
     protected $_locator;
 
+    /**
+     * @var string The base directory for the namespace
+     */
+    protected $_basedir;
+
     public function setup()
     {
+        $this->_basedir = dirname(dirname(__DIR__)) . '/fixtures/classes/component';
+
         $this->_locator = new Nooku\Library\ClassLocatorComponent(array(
             'namespaces' => array(
-                'Fixture\\Component\\Foo' => dirname(dirname(__DIR__)).'/fixtures/classes/component/foo'
+                'Fixture\\Component' => $this->_basedir.'/namespaced',
+                '\\' => $this->_basedir.'/global',
             )
         ));
     }
@@ -29,27 +33,29 @@ class ClassLocatorComponentTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the loader to ensure it locates the correct path
+     * Tests that class maps to the correct file path
+     *
+     * @dataProvider locateProvider
      */
-    public function testLocate()
+    public function testLocateNamespace($path, $class)
     {
-        $basedir = dirname(dirname(__DIR__)).'/fixtures/classes/component/foo';
-
-        $this->assertEquals($basedir.'/controller/bar.php', $this->_locator->locate('Fixture\Component\Foo\ControllerBar', null));
-        $this->assertEquals($basedir.'/controller/baz/baz.php', $this->_locator->locate('Fixture\Component\Foo\ControllerBaz', null));
+        $this->assertEquals($this->_basedir . '/' . $path, $this->_locator->locate($class, null));
     }
 
     /**
-     * Tests the loader to ensure it locates the correct exception path
-     * Exceptions are different, the class name after Exception is all lowercased, e.g:
-     *
-     * ControllerExceptionNotFound => ControllerExceptionNotfound => controller/exception/notfound.php
-     *
+     * @return array
      */
-    public function testLocateException()
+    public function locateProvider()
     {
-        $basedir = dirname(dirname(__DIR__)).'/fixtures/classes/component/foo';
-
-        $this->assertEquals($basedir.'/controller/exception/notfound.php', $this->_locator->locate('Fixture\Component\Foo\ControllerExceptionNotFound', null));
+        return array(
+            array('namespaced/foo/controller/bar.php', 'Fixture\Component\Foo\ControllerBar'),
+            array('namespaced/foo/controller/baz/baz.php', 'Fixture\Component\Foo\ControllerBaz'),
+            array('namespaced/foo/controller/toolbar/mixin/mixin.php', 'Fixture\Component\Foo\ControllerToolbarMixin'),
+            array('namespaced/foo/controller/exception/notfound.php', 'Fixture\Component\Foo\ControllerExceptionNotFound'),
+            array('global/foo/controller/bar.php', 'FooControllerBar'),
+            array('global/foo/controller/baz/baz.php', 'FooControllerBaz'),
+            array('global/foo/controller/toolbar/mixin/mixin.php', 'FooControllerToolbarMixin'),
+            array('global/foo/controller/exception/notfound.php', 'FooControllerExceptionNotFound'),
+        );
     }
 }
