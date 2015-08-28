@@ -1,9 +1,5 @@
 <?php
 
-require_once __DIR__.'/../../../src/class/locator/interface.php';
-require_once __DIR__.'/../../../src/class/locator/abstract.php';
-require_once __DIR__.'/../../../src/class/locator/psr.php';
-
 class ClassLocatorPsrTest extends PHPUnit_Framework_TestCase
 {
     /**

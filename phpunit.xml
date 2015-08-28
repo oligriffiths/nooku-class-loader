@@ -2,10 +2,11 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
+         bootstrap="tests/unit/bootstrap.php"
         >
     <testsuites>
         <testsuite name="Unit Tests">
-            <directory>tests</directory>
+            <directory>tests/unit</directory>
         </testsuite>
     </testsuites>
     <php>

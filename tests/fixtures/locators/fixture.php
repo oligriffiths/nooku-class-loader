@@ -24,7 +24,7 @@ class ClassLocatorFixture extends Library\ClassLocatorAbstract
         //Remove the namespace from the class name
         $class = ltrim(substr($class, strlen($namespace)), '\\');
 
-        $path = $basepath.strtolower($class).'.php';
+        $path = rtrim($basepath,'/').'/'.strtolower($class).'.php';
 
         if(file_exists($path)){
             return $path;

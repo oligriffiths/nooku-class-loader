@@ -1,9 +1,5 @@
 <?php
 
-require_once __DIR__.'/../../src/class/loader.php';
-require_once __DIR__.'/../fixtures/locators/fixture.php';
-require_once __DIR__.'/../fixtures/locators/stub.php';
-
 class ClassLoaderTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -11,15 +7,23 @@ class ClassLoaderTest extends PHPUnit_Framework_TestCase
      */
     protected $_loader;
 
+    /**
+     * @var string The base directory
+     */
+    protected $_basedir;
+
     public function setup()
     {
         //Setup loader
         $this->_loader = Nooku\Library\ClassLoader::getInstance();
 
+        //Set the basedir
+        $this->_basedir = dirname(dirname(__DIR__)).'/fixtures/classes/fixture';
+
         //Add fixture locator
         $this->_loader->registerLocator(new ClassLocatorFixture(array(
             'namespaces' => array(
-                'Fixture' => dirname(__DIR__).'/fixtures/classes/fixture/',
+                'Fixture' => $this->_basedir
             )
         )));
     }
@@ -58,7 +62,7 @@ class ClassLoaderTest extends PHPUnit_Framework_TestCase
     public function testLoad()
     {
         $this->assertTrue($this->_loader->load('Fixture\\Loader'));
-        $this->assertTrue(class_exists('Fixture\\Loader'));
+        $this->assertTrue(class_exists('Fixture\\Loader', false));
     }
 
     /**
@@ -74,7 +78,7 @@ class ClassLoaderTest extends PHPUnit_Framework_TestCase
      */
     public function testGetPath()
     {
-        $this->assertEquals(dirname(__DIR__).'/fixtures/classes/fixture/loader.php', $this->_loader->getPath('Fixture\\Loader'));
+        $this->assertEquals($this->_basedir.'/loader.php', $this->_loader->getPath('Fixture\\Loader'));
     }
 
     /**

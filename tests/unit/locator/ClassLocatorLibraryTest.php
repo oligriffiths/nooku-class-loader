@@ -1,9 +1,5 @@
 <?php
 
-require_once __DIR__.'/../../../src/class/locator/interface.php';
-require_once __DIR__.'/../../../src/class/locator/abstract.php';
-require_once __DIR__.'/../../../src/class/locator/library.php';
-
 class ClassLocatorLibraryTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -11,11 +7,18 @@ class ClassLocatorLibraryTest extends PHPUnit_Framework_TestCase
      */
     protected $_locator;
 
+    /**
+     * @var string The base directory for the namespace
+     */
+    protected $_basedir;
+
     public function setup()
     {
+        $this->_basedir = dirname(dirname(__DIR__)).'/fixtures/classes/library';
+
         $this->_locator = new Nooku\Library\ClassLocatorLibrary(array(
             'namespaces' => array(
-                'Nooku\\Library' => dirname(dirname(__DIR__)).'/fixtures/classes/library'
+                'Nooku\\Library' => $this->_basedir
             )
         ));
     }
@@ -29,23 +32,28 @@ class ClassLocatorLibraryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the loader to ensure it locates the correct path
+     * Tests that class maps to the correct file path
+     *
+     * @dataProvider locateProvider
      */
-    public function testLocate()
+    public function testLocate($path, $namespace, $class)
     {
-        $basedir = dirname(dirname(__DIR__)).'/fixtures/classes/library';
-
-        $this->assertEquals($basedir.'/class/loader.php', $this->_locator->locate('Nooku\Library\ClassLoader', 'Nooku\Library', $basedir));
-        $this->assertEquals($basedir.'/object/object.php', $this->_locator->locate('Nooku\Library\Object', 'Nooku\Library', $basedir));
+        $this->assertEquals($this->_basedir.'/'.$path, $this->_locator->locate($class, $namespace, $this->_basedir));
     }
 
     /**
-     * Tests the loader to ensure it locates the correct path
+     * @return array
      */
-    public function testLocateException()
+    public function locateProvider()
     {
-        $basedir = dirname(dirname(__DIR__)).'/fixtures/classes/library';
-
-        $this->assertEquals($basedir.'/database/exception/notfound.php', $this->_locator->locate('Nooku\Library\DatabaseExceptionNotFound', 'Nooku\Library', $basedir));
+        return array(
+            array('object/object.php', 'Nooku\Library', 'Nooku\Library\Object'),
+            array('class/loader.php', 'Nooku\Library', 'Nooku\Library\ClassLoader'),
+            array('object/manager/manager.php', 'Nooku\Library', 'Nooku\Library\ObjectManager'),
+            array('object/manager/interface.php', 'Nooku\Library', 'Nooku\Library\ObjectManagerInterface'),
+            array('database/exception/notfound.php', 'Nooku\Library', 'Nooku\Library\DatabaseExceptionNotFound'),
+            array('controller/toolbar/mixin/mixin.php', 'Nooku\Library', 'Nooku\Library\ControllerToolbarMixin'),
+            array('controller/toolbar/mixin/interface.php', 'Nooku\Library', 'Nooku\Library\ControllerToolbarMixinInterface'),
+        );
     }
 }
