@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__.'/../../../src/class/registry/interface.php';
-require_once __DIR__.'/../../../src/class/registry/registry.php';
-
 class ClassRegistryTest extends PHPUnit_Framework_TestCase
 {
     /**
