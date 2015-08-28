@@ -173,16 +173,16 @@ class ClassLoaderTest extends PHPUnit_Framework_TestCase
             ),
 
             'Fake\\Namespace\\Two' => array(
-                dirname(__DIR__).'/fixtures',
-                dirname(__DIR__).'/unit',
+                TEST_BASEDIR.'/fixtures',
+                TEST_BASEDIR.'/unit',
             )
         ));
 
         $this->assertContains(__DIR__, $this->_loader->getNamespacePaths('Fake\\Namespace\\One', 'library'));
         $this->assertContains(dirname(__DIR__), $this->_loader->getNamespacePaths('Fake\\Namespace\\One', 'library'));
 
-        $this->assertContains(dirname(__DIR__).'/fixtures', $this->_loader->getNamespacePaths('Fake\\Namespace\\Two', 'library'));
-        $this->assertContains(dirname(__DIR__).'/unit', $this->_loader->getNamespacePaths('Fake\\Namespace\\Two', 'library'));
+        $this->assertContains(TEST_BASEDIR.'/fixtures', $this->_loader->getNamespacePaths('Fake\\Namespace\\Two', 'library'));
+        $this->assertContains(TEST_BASEDIR.'/unit', $this->_loader->getNamespacePaths('Fake\\Namespace\\Two', 'library'));
     }
 
     /**
@@ -200,8 +200,8 @@ class ClassLoaderTest extends PHPUnit_Framework_TestCase
      */
     public function testGetNamespacePaths()
     {
-        $fixture_path = dirname(__DIR__).'/fixtures/classes/fixture/';
-        $library_path = dirname(dirname(__DIR__)).'/src';
+        $fixture_path = $this->_basedir;
+        $library_path = dirname(TEST_BASEDIR).'/src';
 
         // Get namespace path
         $namespaces = $this->_loader->getNamespacePaths('Fixture');
