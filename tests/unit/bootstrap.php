@@ -6,3 +6,6 @@ require_once __DIR__.'/../../src/class/locator/composer.php';
 require_once __DIR__.'/../../src/class/locator/psr.php';
 require_once __DIR__.'/../fixtures/locators/fixture.php';
 require_once __DIR__.'/../fixtures/locators/stub.php';
+
+//Register test bas edirectory
+define('TEST_BASEDIR', dirname(__DIR__));

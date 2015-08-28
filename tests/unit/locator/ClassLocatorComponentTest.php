@@ -10,12 +10,10 @@ class ClassLocatorComponentTest extends PHPUnit_Framework_TestCase
     /**
      * @var string The base directory for the namespace
      */
-    protected $_basedir;
+    protected $_basedir = TEST_BASEDIR.'/fixtures/classes/component';
 
     public function setup()
     {
-        $this->_basedir = dirname(dirname(__DIR__)) . '/fixtures/classes/component';
-
         $this->_locator = new Nooku\Library\ClassLocatorComponent(array(
             'namespaces' => array(
                 'Fixture\\Component' => $this->_basedir.'/namespaced',

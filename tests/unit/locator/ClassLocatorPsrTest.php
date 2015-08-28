@@ -11,7 +11,7 @@ class ClassLocatorPsrTest extends PHPUnit_Framework_TestCase
     {
         $this->_locator = new Nooku\Library\ClassLocatorPsr(array(
             'namespaces' => array(
-                'Psr' => dirname(dirname(__DIR__)).'/fixtures/classes/psr'
+                'Psr' => TEST_BASEDIR.'/fixtures/classes/psr'
             )
         ));
     }
