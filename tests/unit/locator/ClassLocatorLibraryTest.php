@@ -10,12 +10,10 @@ class ClassLocatorLibraryTest extends PHPUnit_Framework_TestCase
     /**
      * @var string The base directory for the namespace
      */
-    protected $_basedir;
+    protected $_basedir = TEST_BASEDIR.'/fixtures/classes/library';
 
     public function setup()
     {
-        $this->_basedir = dirname(dirname(__DIR__)).'/fixtures/classes/library';
-
         $this->_locator = new Nooku\Library\ClassLocatorLibrary(array(
             'namespaces' => array(
                 'Nooku\\Library' => $this->_basedir

@@ -10,15 +10,12 @@ class ClassLoaderTest extends PHPUnit_Framework_TestCase
     /**
      * @var string The base directory
      */
-    protected $_basedir;
+    protected $_basedir = TEST_BASEDIR.'/fixtures/classes/fixture';
 
     public function setup()
     {
         //Setup loader
         $this->_loader = Nooku\Library\ClassLoader::getInstance();
-
-        //Set the basedir
-        $this->_basedir = dirname(dirname(__DIR__)).'/fixtures/classes/fixture';
 
         //Add fixture locator
         $this->_loader->registerLocator(new ClassLocatorFixture(array(
