@@ -10,7 +10,7 @@ class ClassLocatorComposerTest extends PHPUnit_Framework_TestCase
     public function setup()
     {
         $this->_locator = new Nooku\Library\ClassLocatorComposer(array(
-            'vendor_path' => dirname(dirname(__DIR__)).'/fixtures/composer'
+            'vendor_path' => TEST_BASEDIR.'/fixtures/composer'
         ));
     }
 
